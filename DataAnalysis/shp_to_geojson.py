@@ -1,3 +1,8 @@
+#Code is from frankrowe github
+#Frank Rowe: https://gist.github.com/frankrowe
+#shp2gj.py: https://gist.github.com/frankrowe/6071443
+
+
 import pyshp as shapefile
 # read the shapefile
 reader = shapefile.Reader("TigerData/tl_2017_39_tract.shp")
