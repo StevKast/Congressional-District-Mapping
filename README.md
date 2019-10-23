@@ -22,3 +22,6 @@ local machine. Below, are the instructions to get it:
 4. Click Submit
 5. Select Ohio for Select a State
 6. Inside the zip file you just downloaded, it will be tlp_2017_39_tract.shp
+
+**REVISION**
+THe .shp file is now available in the TigerData Folder
