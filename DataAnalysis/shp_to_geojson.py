@@ -3,7 +3,7 @@
 #shp2gj.py: https://gist.github.com/frankrowe/6071443
 
 
-import pyshp as shapefile
+import shapefile
 # read the shapefile
 reader = shapefile.Reader("TigerData/tl_2017_39_tract.shp")
 fields = reader.fields[1:]
