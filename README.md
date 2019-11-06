@@ -25,3 +25,7 @@ local machine. Below, are the instructions to get it:
 
 **REVISION**
 THe .shp file is now available in the TigerData Folder
+
+There is a seperate github repository for the web application portion of the project.
+Github link: https://www.github.com/StevKast/Congressional-District-Mapping-SPA
+Website link: https://www.congressional-districting.herokuapp.com/index.html
