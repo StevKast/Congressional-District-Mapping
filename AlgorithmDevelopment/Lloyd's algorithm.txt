@@ -1,0 +1,20 @@
+Lloyd's algorithm
+
+inputs: tracts, number elements
+
+		Tracts: Geographic center, id
+		number elements : 16
+
+
+algorithm pseudocode
+
+
+output: Lists of Sets
+		
+		Sets: Each district contains the set of id's
+
+
+Tim - Generate CSV with tract id and lat/lon data fo geo center
+Goat - Implement Lloyd's algorithm
+Steven/Brian - Implementing output into frontend
+		
