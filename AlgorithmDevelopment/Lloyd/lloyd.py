@@ -49,7 +49,32 @@ def printPop():
     for key in distList.keys():
         print(key +" - "+ str(totalPop(key)))
 
+#Transfers data from the given dict to the distList dic
+def transferData(results, data):
+    for key in results.keys(): #key -> int
+        for loc in results[key]: #loc -> numpy array
+            for d in data: #d -> list
+                x = float(d[3])
+                y = float(d[4])
+                if loc[0] == x and loc[1] == y:
+                    distList[distListKeys[key]].append(d)
+                    data.pop(data.index(d))
+                    break
+
+#check if every district pop is withing 2000
+def similarPop():
+    for dist1 in distList:
+        for dist2 in distList:
+            if totalPop(dist1) - totalPop(dist2) > abs(2000):
+                return False
+    return True
+
 #LLoyd's
+#----------------------------\/
+#
+#input: X - list of all points
+#input: mu - list of current centers
+#output: dictionnary of clusters
 def cluster_points(X, mu):
     clusters  = {}
     for x in X:
@@ -62,6 +87,9 @@ def cluster_points(X, mu):
     return clusters
 
 #Creates new centers
+#input: mu - list of current centers
+#input: cluster - list of current clusters
+#output: newmu list of new centers
 def reevaluate_centers(mu, clusters):
     newmu = []
     keys = sorted(clusters.keys())
@@ -71,7 +99,9 @@ def reevaluate_centers(mu, clusters):
 
 #Tuple is a collection with UNCHANGEABLE order
 #This checks if the current mu's are the same
-#returns boolean
+#input: mu - current centers
+#input: oldmu - old centers
+#output: true if tuples are same, false otherwise
 def has_converged(mu, oldmu):
     return set([tuple(a) for a in mu]) == set([tuple(a) for a in oldmu])
 
@@ -94,17 +124,6 @@ def find_centers(X, K):
         mu = reevaluate_centers(oldmu, clusters)
     return(clusters)
 
-#Transfers data from the given dict to the distList dic
-def transferData(results, data):
-    for key in results.keys(): #key -> int
-        for loc in results[key]: #loc -> numpy array
-            for d in data: #d -> list
-                x = float(d[3])
-                y = float(d[4])
-                if loc[0] == x and loc[1] == y:
-                    distList[distListKeys[key]].append(d)
-                    data.pop(data.index(d))
-                    break
 
 #creates list of data points based on the census tracts
 #x and y values are the coordinates
@@ -112,24 +131,27 @@ def init_data(data):
     X = numpy.array([(float(data[i][3]), float(data[i][4])) for i in range(len(data))])
     return X
 
-#Creates a random list of points with x and y values
-#TESTING METHOD ONLY
-def init_board(N):
-    X = numpy.array([(random.uniform(-100, 100), random.uniform(-100, 100)) for i in range(N)])
-    return X
-
 #Main
 with open(filename) as csv_file:
+    #read csv file
     csv_reader = csv.reader(csv_file, delimiter=',')
     data = list(csv_reader)
     data.pop(0)
 
-    #TESTING
-    #Y = list(init_board(100))
-
+    #call lloyds
     X = list(init_data(data))
     results = find_centers(X, 16)
+    count = 0
     transferData(results, data)
+    while not similarPop():
+        print('try ', count)
+        count = count + 1
+        results = find_centers(X, 16)
+        transferData(results, data)
+
+    #print pop for testing
+    #print to json
     printPop()
+    print(similarPop())
     with open('result.json', 'w') as p:
         json.dump(distList, p)
