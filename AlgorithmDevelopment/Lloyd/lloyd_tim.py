@@ -101,6 +101,7 @@ def reachCap(tractList):
 def bestKey(input, mu, clusters):
     x = input.getCoords()
     # minimum = min([(i[0], numpy.linalg.norm(x-mu[i[0]])) for i in enumerate(mu)])[0]
+    # TIM: What is this function and what does it do?? Does it find the closest center for each tract?
     bestkey = min([(i[0], numpy.linalg.norm(x-mu[i[0]])) for i in enumerate(mu)], key=lambda t:t[1])[0]
     # print(minimum)
     return bestkey
@@ -113,6 +114,7 @@ def cluster_points(X, mu):
     clusters  = {}
     for x in X:
         bestmukey = bestKey(x, mu, clusters)
+        # TIM: What is the purpose of this try catch? Why wouldn't you be able to append?
         try:
             clusters[bestmukey].append(x)
         except KeyError:
@@ -133,6 +135,7 @@ def reevaluate_centers(mu, clusters):
         clusterCoords = []
         for i in clusters[k]:
             clusterCoords.append(i.getCoords())
+        # TIM: Does this find a new center of the district??
         newmu.append(numpy.mean(clusterCoords, axis = 0))
     return newmu
 
@@ -157,10 +160,12 @@ def find_centers(X, K):
     mu = []
     oldmu = []
 
+    # TIM: get the coordinates for each tract sample and append to mu/oldmu
     for i in range(K):
         mu.append(muTracts[i].getCoords())
         oldmu.append(oldmuTracts[i].getCoords())
 
+    # TIM: Why are we checking for convergence?
     while not has_converged(mu, oldmu):
         oldmu = mu
         # Assign all points in X to clusters
