@@ -36,6 +36,7 @@ def totalPop(key):
                 totalPop = totalPop + int(row[1])
     return totalPop
 
+
 #Find the lowest pop distrcit
 def lowestPop():
     lowestPopDist = 'd1'
@@ -46,8 +47,12 @@ def lowestPop():
 
 #Print out pop of each districts
 def printPop():
+    ohioPop = 0
     for key in distList.keys():
+        ohioPop += totalPop(key)
         print(key +" - "+ str(totalPop(key)))
+
+    print('ohio pop = ', ohioPop)
 
 #Transfers data from the given dict to the distList dic
 def transferData(results, data):
@@ -57,33 +62,46 @@ def transferData(results, data):
                 x = float(d[3])
                 y = float(d[4])
                 if loc[0] == x and loc[1] == y:
-                    distList[distListKeys[key]].append(d)
+                    currentKey = distListKeys[key]
+                    distList[currentKey].append(d)
                     data.pop(data.index(d))
                     break
 
-#check if every district pop is withing 2000
-def similarPop():
+#check if every district pop is withing a num
+def similarPop(range):
     for dist1 in distList:
         for dist2 in distList:
-            if totalPop(dist1) - totalPop(dist2) > abs(2000):
+            if totalPop(dist1) - totalPop(dist2) > abs(range):
                 return False
     return True
 
+def reachCap(keyInput):
+    return totalPop(keyInput) > 800000
+
 #LLoyd's
 #----------------------------\/
-#
-#input: X - list of all points
+#input x - current data point
+#input
+def bestKey(x, mu):
+    bestkey = min([(i[0], numpy.linalg.norm(x-mu[i[0]])) \
+            for i in enumerate(mu)], key=lambda t:t[1])[0]
+    return bestkey
+
+
+#input: data - list of all points
 #input: mu - list of current centers
 #output: dictionnary of clusters
-def cluster_points(X, mu):
+def cluster_points(dataInput, mu):
     clusters  = {}
-    for x in X:
-        bestmukey = min([(i[0], numpy.linalg.norm(x-mu[i[0]])) \
-                    for i in enumerate(mu)], key=lambda t:t[1])[0]
+    for x in dataInput:
+        bestmukey = bestKey(x, mu)
         try:
             clusters[bestmukey].append(x)
         except KeyError:
             clusters[bestmukey] = [x]
+        # transferData(clusters, data)
+        # if reachCap(bestmukey):
+        #     mu.pop(index(bestmukey))
     return clusters
 
 #Creates new centers
@@ -141,17 +159,10 @@ with open(filename) as csv_file:
     #call lloyds
     X = list(init_data(data))
     results = find_centers(X, 16)
-    count = 0
     transferData(results, data)
-    while not similarPop():
-        print('try ', count)
-        count = count + 1
-        results = find_centers(X, 16)
-        transferData(results, data)
 
     #print pop for testing
     #print to json
     printPop()
-    print(similarPop())
     with open('result.json', 'w') as p:
         json.dump(distList, p)
