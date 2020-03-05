@@ -6,11 +6,12 @@
 
 import json
 
-dist = []
-tiger = []
-results_geoid = {}
-files = ['Lloyd/result.json', 'SplitlineDictionary.json']
+dist = [] # Stores the result of the algorithm
+tiger = [] # Stores the geojson data
+results_geoid = {} # Stores the cleaned result of algorithm if needed
+files = ['Lloyd/result.json', 'SplitlineDictionary.json'] # Files to merge json
 
+# Loop through the files
 for file in files:
 	# Open the file to be read
 	with open(file, 'r') as f:
@@ -42,18 +43,3 @@ for file in files:
 	else:
 		with open('result_' + file, 'w') as wr:
 			json.dump(tiger, wr)
-
-# with open('SplitlineDictionary.json', 'r') as f:
-# 	dist = json.load(f)
-
-# with open('../DataAnalysis/TigerData/tl_2017_39_tract.json', 'r') as f:
-# 	tiger = json.load(f)
-	
-
-# # Add the district information to the json
-# for tract in range(len(tiger['features'])):
-# 	geoid = tiger["features"][tract]['properties']['GEOID']
-# 	tiger["features"][tract]['properties']['district'] = 'd' + str(dist[geoid])
-
-# with open('ShortestSplitLine_Result.json', 'w') as wr:
-# 	json.dump(tiger, wr)
