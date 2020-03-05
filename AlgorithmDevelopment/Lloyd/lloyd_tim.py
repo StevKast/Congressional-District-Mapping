@@ -22,6 +22,8 @@ distList = {'d1':[],
             'd14':[],
             'd15':[],
             'd16':[]}
+TARGET_DISTRICT_MEAN = 710767
+TARGET_DISTRICT_SD   = 0
 #class
 class tract:
     def __init__(self, id, pop, x, y):
@@ -103,8 +105,16 @@ def bestKey(input, mu, clusters):
     # minimum = min([(i[0], numpy.linalg.norm(x-mu[i[0]])) for i in enumerate(mu)])[0]
     # TIM: What is this function and what does it do?? Does it find the closest center for each tract?
     bestkey = min([(i[0], numpy.linalg.norm(x-mu[i[0]])) for i in enumerate(mu)], key=lambda t:t[1])[0]
-    # print(minimum)
+    # print(clusters)
     return bestkey
+
+# Function to make sure that all mu are still viable. Will remove from list once population exceeds mean + sd.
+# For each of the clusters, add up their total populations, if the population exceeds mu + sd, remove the district
+# from the viable mu list.
+def check_mu(viable_mu, clusters):
+    for c in clusters:
+        print(clusters[c])
+    exit()
 
 
 #input: data - list of all points
@@ -112,13 +122,15 @@ def bestKey(input, mu, clusters):
 #output: dictionnary of clusters
 def cluster_points(X, mu):
     clusters  = {}
+    viable_mu = mu.copy()
     for x in X:
-        bestmukey = bestKey(x, mu, clusters)
+        bestmukey = bestKey(x, viable_mu, clusters)
         # TIM: What is the purpose of this try catch? Why wouldn't you be able to append?
         try:
             clusters[bestmukey].append(x)
         except KeyError:
             clusters[bestmukey] = [x]
+        check_mu(viable_mu, clusters)
 
 
     return clusters
