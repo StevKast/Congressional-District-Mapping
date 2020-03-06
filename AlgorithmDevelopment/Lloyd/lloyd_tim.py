@@ -23,7 +23,7 @@ distList = {'d1':[],
             'd15':[],
             'd16':[]}
 TARGET_DISTRICT_MEAN = 710767
-TARGET_DISTRICT_SD   = 0
+TARGET_DISTRICT_SD   = TARGET_DISTRICT_MEAN + (TARGET_DISTRICT_MEAN * 0.005)
 #class
 class tract:
     def __init__(self, id, pop, x, y):
@@ -113,8 +113,18 @@ def bestKey(input, mu, clusters):
 # from the viable mu list.
 def check_mu(viable_mu, clusters):
     for c in clusters:
-        print(clusters[c])
-    exit()
+        cluster_pop = 0
+        # print(c)
+        for index in clusters[c]:
+            cluster_pop += index.pop
+            # print(clusters[c])
+
+        if cluster_pop >= TARGET_DISTRICT_SD:
+            # print(viable_mu[c])
+            # exit()
+            viable_mu[c] = [0,0]
+            # print(viable_mu)
+            continue
 
 
 #input: data - list of all points
@@ -132,7 +142,7 @@ def cluster_points(X, mu):
             clusters[bestmukey] = [x]
         check_mu(viable_mu, clusters)
 
-
+    # print(viable_mu)    
     return clusters
 
 #Creates new centers
@@ -159,6 +169,17 @@ def reevaluate_centers(mu, clusters):
 def has_converged(mu, oldmu):
     return set([tuple(a) for a in mu]) == set([tuple(a) for a in oldmu])
 
+def print_cluster_pops(clusters):
+    total_tracts = 0
+    for c in clusters:
+        cluster_pop = 0
+        for index in clusters[c]:
+            cluster_pop += index.pop
+        total_tracts += len(clusters[c])
+        print(c, cluster_pop, len(clusters[c]))
+    print(total_tracts)
+    exit()    
+
 
 #Call this function for Lloyds
 #X is a list of all points, K is the number of clusters you want
@@ -171,6 +192,7 @@ def find_centers(X, K):
     muTracts = random.sample(X, K)
     mu = []
     oldmu = []
+    count = 0
 
     # TIM: get the coordinates for each tract sample and append to mu/oldmu
     for i in range(K):
@@ -179,11 +201,17 @@ def find_centers(X, K):
 
     # TIM: Why are we checking for convergence?
     while not has_converged(mu, oldmu):
+        count += 1
         oldmu = mu
         # Assign all points in X to clusters
         clusters = cluster_points(X, mu)
         # Reevaluate centers
         mu = reevaluate_centers(oldmu, clusters)
+        # print_cluster_pops(clusters)
+        if count >= 100:
+            break
+        # Sanity tracker for tracking algorithm
+        print(count)
     return(clusters)
 
 
@@ -211,5 +239,5 @@ with open(filename) as csv_file:
     #print pop for testing
     #print to json
     printPop()
-    # with open('result.json', 'w') as p:
-    #     json.dump(distList, p)
+    with open('result.json', 'w') as p:
+        json.dump(distList, p)
