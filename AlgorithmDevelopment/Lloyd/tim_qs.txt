@@ -1,0 +1,2 @@
+Questions for goat:
+	Why are we checking for convergence in find centers?
