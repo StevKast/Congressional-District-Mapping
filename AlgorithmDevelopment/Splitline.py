@@ -3,10 +3,10 @@ import json
 
 dictionary = {}
 districtNumber = 1
-tract_data = pd.read_csv("AlgorithmDevelopment_tract_data.csv")
-populations = tract_data[' POP'].tolist()
+tract_data = pd.read_csv("ordered_tracts.csv")
+populations = tract_data['POP'].tolist()
 geoID = tract_data['GEOID'].tolist()
-
+tractName = tract_data['FULL_NAME'].tolist()
 sumPop = 0
 for population in populations:
     sumPop += int(population)
