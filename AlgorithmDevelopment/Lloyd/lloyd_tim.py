@@ -2,7 +2,7 @@ import csv, os, json, numpy, random
 from pprint import pprint
 
 #Globals
-filename = "tract_data.csv"
+filename = "ordered_tracts.csv"
 data = []
 distListKeys = ['d1','d2','d3','d4','d5','d6','d7','d8','d9','d10','d11','d12','d13','d14','d15','d16']
 distList = {'d1':[],
@@ -54,8 +54,8 @@ def totalPop(key):
         return totalPop
     else:
         for row in data:
-            if int(row[1]) is not None:
-                totalPop = totalPop + int(row[1])
+            if int(row[2]) is not None:
+                totalPop = totalPop + int(row[2])
     return totalPop
 
 
@@ -81,7 +81,7 @@ def transferData(results, data):
     for key in results.keys(): #key -> int
         for loc in results[key]: #loc -> numpy array
             for d in data: #d -> list
-                if loc.getCoords()[0] == float(d[3]) and loc.getCoords()[1] == float(d[4]):
+                if loc.getCoords()[0] == float(d[4]) and loc.getCoords()[1] == float(d[5]):
                     currentKey = distListKeys[key]
                     distList[currentKey].append(d)
                     data.pop(data.index(d))
@@ -220,7 +220,7 @@ def find_centers(X, K):
 def init_data(data):
     output = list()
     for d in data:
-        temp = tract(int(d[0]), int(d[1]), float(d[3]), float(d[4]))
+        temp = tract(int(d[1]), int(d[2]), float(d[4]), float(d[5]))
         output.append(temp)
     return output
 
