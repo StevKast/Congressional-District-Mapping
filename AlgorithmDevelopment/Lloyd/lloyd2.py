@@ -156,12 +156,15 @@ def find_centers(X, K):
     muTracts = random.sample(X, K)
     mu = []
     oldmu = []
+    count = 0
 
     for i in range(K):
         mu.append(muTracts[i].getCoords())
         oldmu.append(oldmuTracts[i].getCoords())
 
     while not has_converged(mu, oldmu):
+        print(count)
+        count += 1
         oldmu = mu
         # Assign all points in X to clusters
         clusters = cluster_points(X, mu)
