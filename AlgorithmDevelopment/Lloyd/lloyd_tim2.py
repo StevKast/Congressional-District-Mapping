@@ -52,6 +52,38 @@ class tract:
     def __repr__(self):
         return "{}, {}, {}".format(self.id, self.pop, self.coords)
 
+def transferData(results, data):
+    for key in results.keys(): #key -> int
+        for loc in results[key]: #loc -> numpy array
+            for d in data: #d -> list
+                if loc.getCoords()[0] == float(d[4]) and loc.getCoords()[1] == float(d[5]):
+                    currentKey = distListKeys[key]
+                    distList[currentKey].append(d)
+                    data.pop(data.index(d))
+                    break
+
+#Find current total pop of specified district
+def totalPop(key):
+    data = distList[key]
+    totalPop = 0
+    if len(data) == 0:
+        return totalPop
+    else:
+        for row in data:
+            if int(row[2]) is not None:
+                totalPop = totalPop + int(row[2])
+    return totalPop
+
+
+#Print out pop of each districts and total pop
+def printPop():
+    ohioPop = 0
+    for key in distList.keys():
+        ohioPop += totalPop(key)
+        print(key +" - "+ str(totalPop(key)))
+
+    print('ohio pop = ', ohioPop)
+
 # ----------------------Algorithm----------------------------------------
 
 # Calculate the distance from the tract to the center
@@ -139,6 +171,7 @@ def find_centers(X, K):
     oldmu = []
     count = 0
     clusters = {}
+    ogX = X.copy()
 
     # TIM: get the coordinates for each tract sample and append to mu/oldmu
     for i in range(K):
@@ -148,11 +181,10 @@ def find_centers(X, K):
     # TIM: Why are we checking for convergence?
     while not has_converged(mu, oldmu):
         count += 1
-        ogX = X.copy()
         oldmu = mu
         # Assign all points in X to clusters
         clusters = cluster_points(X, mu)
-        X = ogX
+        X = ogX.copy()
         # Reevaluate centers
         mu = reevaluate_centers(oldmu, clusters)
         # print_cluster_pops(clusters)
@@ -160,7 +192,7 @@ def find_centers(X, K):
             break
         # Sanity tracker for tracking algorithm
         print(count)
-    print_cluster_pops(clusters)
+    # print_cluster_pops(clusters)
     return(clusters)
 
 #creates list of data points based on the census tracts
