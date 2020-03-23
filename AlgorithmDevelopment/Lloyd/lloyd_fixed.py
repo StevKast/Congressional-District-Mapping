@@ -3,6 +3,7 @@
 # Date : 3-10-2020
 
 import csv, os, json, numpy, random, math
+import pandas as pd
 from pprint import pprint
 
 #Globals
@@ -175,6 +176,15 @@ def print_cluster_pops(clusters):
     print(total_tracts)
     exit()    
 
+def read_initial_centers(X):
+    initial = pd.read_csv('optimized_initial_centers.csv')
+    ret = []
+    for index, row in initial.iterrows():
+        for x in X:
+            if row['geoid'] == x.getId():
+                ret.append(x)
+    return ret
+
 #Call this function for Lloyds
 #X is a list of all points, K is the number of clusters you want
 #output: dictionarry of all clusters
@@ -183,7 +193,7 @@ def print_cluster_pops(clusters):
 def find_centers(X, K):
     # Initialize to K random centers
     oldmuTracts = random.sample(X, K)
-    muTracts = random.sample(X, K)
+    muTracts = read_initial_centers(X)
     mu = []
     oldmu = []
     count = 0
@@ -208,9 +218,9 @@ def find_centers(X, K):
         if count >= 100:
             break
         # Sanity tracker for tracking algorithm
-        if count % 5 == 0:
-            print('Iteration of Convergence: ', count)
-        # print_cluster_pops(clusters)
+        # if count % 5 == 0:
+        print('Iteration of Convergence: ', count)
+        break
     print('Converged on iteration: ', count)
     return(clusters)
 
@@ -233,6 +243,7 @@ with open(filename) as csv_file:
     #call lloyds
     X = list(init_data(data))
     results = find_centers(X, 16)
+    # print_cluster_pops(results)
     transferData(results, data)
 
     #print pop for testing
