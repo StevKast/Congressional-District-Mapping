@@ -52,8 +52,13 @@ populations. This had mixed results because the population dispartiy among tract
 populations, was greater than expected.
 5. lloyd_tim3.py: Iteration that only added tracts to districts, in an iterative manner, that had the lowest population. This 
 proved to succeed in the goal of creating evenly populated districts but this still produced contiguity issues.
-6. FUTURE ITERATION: This will likely feature fixed starting points across the state and prevent the optimization of centers 
+6. lloyd_fixed.py: This will likely feature fixed starting points across the state and prevent the optimization of centers 
 in order to allow the districts to grow organically and not overlap like in the past.
+7. lloyd_fixed_split.py: This iteration built on the previous with fixing the district centers but in order to help the contiguity issue, once the tracts added has reached a certain percentage, the tracts will only add to the closest district.
+
+Issues:
+- The main issue is that the districts that are being generated are not continous.
+...There seems to be a correlation between the balance of populations and degree of a district being contiguous. The more balanced the populations are, the less contiguous a district is.
 
 ### Shortest Splitline Algorithm
 Folder: Splitline.
