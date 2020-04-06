@@ -1,5 +1,7 @@
 # Congressional-District-Mapping
 
+## Data Analysis
+
 To run the Romer Initial Data Exploration notebook in the Data Analysis 
 folder, you will need to install an external python library via pip in 
 your anaconda environment via the conda prompt. The link for the repo 
@@ -24,8 +26,36 @@ local machine. Below, are the instructions to get it:
 6. Inside the zip file you just downloaded, it will be tlp_2017_39_tract.shp
 
 **REVISION**
-THe .shp file is now available in the TigerData Folder
+The .shp file is now available in the TigerData Folder
 
 There is a seperate github repository for the web application portion of the project.
 Github link: https://www.github.com/StevKast/Congressional-District-Mapping-SPA
 Website link: https://www.congressional-districting.herokuapp.com/index.html
+
+## Algorithm Development
+
+### Modified Lloyd's Algorithm
+Folder: Lloyd.
+
+There have been several iterations of this algorithm in attempts to make compact, 
+contiguous congressional districts.
+
+Author's: Tim Romer, Gauthier Knox Kelly
+
+Iterations:
+1. lloyd.py: A test script that worked to read in all tracts and add them to congressional districts.
+2. lloyd2.py: Script that iteratively recentered districts to add the nearest tract to eventually reach a convergence.
+3. lloyd_tim.py: Iteration that added a population constraint that attempted to limit the population allowed in each district. 
+This lead to a large amount of contiguity issues among districts.
+4. lloyd_tim2.py: Iteration that focused on balancing the amount of tracts to each district. Another attempt to balance the 
+populations. This had mixed results because the population dispartiy among tracts, that were supposed to have even 
+populations, was greater than expected.
+5. lloyd_tim3.py: Iteration that only added tracts to districts, in an iterative manner, that had the lowest population. This 
+proved to succeed in the goal of creating evenly populated districts but this still produced contiguity issues.
+6. FUTURE ITERATION: This will likely feature fixed starting points across the state and prevent the optimization of centers 
+in order to allow the districts to grow organically and not overlap like in the past.
+
+### Shortest Splitline Algorithm
+Folder: Splitline.
+
+Author: Brian Fotheringham

@@ -9,7 +9,7 @@ import json
 dist = [] # Stores the result of the algorithm
 tiger = [] # Stores the geojson data
 results_geoid = {} # Stores the cleaned result of algorithm if needed
-files = ['Lloyd/result.json', 'SplitlineDictionary.json'] # Files to merge json
+files = ['Lloyd/result.json', 'Splitline/SplitlineDictionary.json'] # Files to merge json
 
 # Loop through the files
 for file in files:
@@ -25,7 +25,7 @@ for file in files:
 	if file == 'Lloyd/result.json':
 		for district in dist:
 			for i in range(len(dist[district])):
-				results_geoid[dist[district][i][0]] = district
+				results_geoid[dist[district][i][1]] = district
 
 
 	# Add the district information to the json
@@ -40,6 +40,8 @@ for file in files:
 	if file == 'Lloyd/result.json':
 		with open('result_Lloyd.json', 'w') as wr:
 			json.dump(tiger, wr)
-	else:
-		with open('result_' + file, 'w') as wr:
+	elif file == 'Splitline/SplitlineDictionary.json':
+		with open('result_Splitline.json', 'w') as wr:
 			json.dump(tiger, wr)
+	else:
+		print('Bad_File')

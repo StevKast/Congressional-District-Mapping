@@ -1,0 +1,9 @@
+LLoyds:
+	-Relax population mean and sd constraint
+	-
+
+
+	-NEW ALGO
+		- Focus on growing each district by one tract iteratively
+		- Add to district based off of distance to the random center
+		- THis should allow the population constraint to be upheld
