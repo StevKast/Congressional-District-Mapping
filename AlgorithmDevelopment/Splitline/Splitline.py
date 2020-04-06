@@ -1,49 +1,178 @@
 import pandas as pd
 import json
+import math
 
 dictionary = {}
 districtNumber = 1
-tract_data = pd.read_csv("ordered_tracts.csv")
-populations = tract_data['POP'].tolist()
-geoID = tract_data['GEOID'].tolist()
-tractName = tract_data['FULL_NAME'].tolist()
+
+data = pd.read_csv('tract_data.csv', delimiter=',')
+data = data.values.tolist()
+populations = [item[1] for item in data]
+
 sumPop = 0
-for population in populations:
-    sumPop += int(population)
+i = 0
+for p in populations:
+    sumPop += p
 
 
-def splitLine(tracts, geo, currentPopGoal, overallPop):
+def getSplit(cdata, goal):
+    endpop = 0
+    current = 0
+    pops = [item[1] for item in cdata]
+    for p in pops:
+        if current < goal:
+            current += p
+            endpop += 1
+    return endpop
+
+
+def topRight(cdata, popGoal):
+    topRightC = []
+    tr_data = []
+    for x in cdata:
+        if len(topRightC) == 0 or (x[3] > topRightC[3] and x[4] > topRightC[4]):
+            topRightC = x
+
+    for x in cdata:
+        d = math.sqrt((x[3] - topRightC[3]) ** 2) + ((x[4] - topRightC[4]) ** 2)
+        x.append(d)
+        tr_data.append(x)
+
+    tr_data = sorted(tr_data, key=lambda x: x[5])
+    split = getSplit(tr_data, popGoal)
+    tr_data = tr_data[0:split]
+    topLeftC = []
+    bottomRightC = []
+    for x in cdata:
+        if len(topLeftC) == 0 or (x[3] > topLeftC[3] and x[4] < topLeftC[4]):
+            topLeftC = x
+        elif len(bottomRightC) == 0 or (x[3] < bottomRightC[3] and x[4] > bottomRightC[4]):
+            bottomRightC = x
+
+    distance = math.sqrt((topLeftC[3] - bottomRightC[3]) ** 2 + (topLeftC[4] - bottomRightC[4]) ** 2)
+    return distance, tr_data
+
+
+def topLeft(cdata, popGoal):
+    topLeftC = []
+    tl_data = []
+    for x in cdata:
+        if len(topLeftC) == 0 or (x[3] > topLeftC[3] and x[4] < topLeftC[4]):
+            topLeftC = x
+
+    for x in cdata:
+        d = math.sqrt((x[3] - topLeftC[3]) ** 2) + ((x[4] - topLeftC[4]) ** 2)
+        x.append(d)
+        tl_data.append(x)
+
+    tl_data = sorted(tl_data, key=lambda x: x[5])
+    split = getSplit(tl_data, popGoal)
+    tl_data = tl_data[0:split]
+    topRightC = []
+    bottomLeftC = []
+    for x in cdata:
+        if len(topRightC) == 0 or (x[3] > topRightC[3] and x[4] > topRightC[4]):
+            topRightC = x
+        elif len(bottomLeftC) == 0 or (x[3] < bottomLeftC[3] and x[4] < bottomLeftC[4]):
+            bottomLeftC = x
+
+    distance = math.sqrt((topLeftC[3] - bottomLeftC[3]) ** 2 + (topLeftC[4] - bottomLeftC[4]) ** 2)
+    return distance, tl_data
+
+
+def bottomLeft(cdata, popGoal):
+    bottomLeftC = []
+    bl_data = []
+    for x in cdata:
+        if len(bottomLeftC) == 0 or (x[3] < bottomLeftC[3] and x[4] < bottomLeftC[4]):
+            bottomLeftC = x
+
+    for x in cdata:
+        d = math.sqrt((x[3] - bottomLeftC[3]) ** 2) + ((x[4] - bottomLeftC[4]) ** 2)
+        x.append(d)
+        bl_data.append(x)
+
+    bl_data = sorted(bl_data, key=lambda x: x[5])
+    split = getSplit(bl_data, popGoal)
+    bl_data = bl_data[0:split]
+    topLeftC = []
+    bottomRightC = []
+    for x in cdata:
+        if len(topLeftC) == 0 or (x[3] > topLeftC[3] and x[4] < topLeftC[4]):
+            topLeftC = x
+        elif len(bottomRightC) == 0 or (x[3] < bottomRightC[3] and x[4] > bottomRightC[4]):
+            bottomRightC = x
+
+    distance = math.sqrt((topLeftC[3] - bottomRightC[3]) ** 2 + (topLeftC[4] - bottomRightC[4]) ** 2)
+    return distance, bl_data
+
+
+def bottomRight(cdata, popGoal):
+    bottomRightC = []
+    br_data = []
+    for x in cdata:
+        if len(bottomRightC) == 0 or (x[3] < bottomRightC[3] and x[4] > bottomRightC[4]):
+            bottomRightC = x
+
+    for x in cdata:
+        d = math.sqrt((x[3] - bottomRightC[3]) ** 2) + ((x[4] - bottomRightC[4]) ** 2)
+        x.append(d)
+        br_data.append(x)
+
+    br_data = sorted(br_data, key=lambda x: x[5])
+    split = getSplit(br_data, popGoal)
+    br_data = br_data[0:split]
+    topRightC = []
+    bottomLeftC = []
+    for x in cdata:
+        if len(topRightC) == 0 or (x[3] > topRightC[3] and x[4] > topRightC[4]):
+            topRightC = x
+        elif len(bottomLeftC) == 0 or (x[3] < bottomLeftC[3] and x[4] < bottomLeftC[4]):
+            bottomLeftC = x
+
+    distance = math.sqrt((topRightC[3] - bottomLeftC[3]) ** 2 + (topRightC[4] - bottomLeftC[4]) ** 2)
+    return distance, br_data
+
+def shortest(cdata, currentPopGoal):
+    choices = []
+    choices.append(topRight(cdata, currentPopGoal))
+    choices.append(topLeft(cdata, currentPopGoal))
+    choices.append(bottomLeft(cdata, currentPopGoal))
+    choices.append(bottomRight(cdata, currentPopGoal))
+
+    shortestSplit = []
+    for c in choices:
+        if len(shortestSplit) == 0 or c[0] < shortestSplit[0]:
+            shortestSplit = c
+    return shortestSplit[1]
+
+
+def splitLine(cdata, currentPopGoal, overallPop):
     global districtNumber
 
-    if currentPopGoal == overallPop/16:
-        print(geo)
+    if currentPopGoal == overallPop / 16:
+        geo = [item[0] for item in cdata]
         for g in geo:
             dictionary[g] = districtNumber
         districtNumber += 1
         return
 
     currentPopGoal = currentPopGoal / 2
-    sum_p = 0
-    tract_number = 0
 
-    for population_x in tracts:
-        sum_p += population_x
-        if sum_p > currentPopGoal:
-            SplitA_Pop = tracts[:tract_number]
-            SplitA_ID = geo[:tract_number]
-            SplitB_Pop = tracts[tract_number-1:]
-            SplitB_ID = geo[tract_number-1:]
-            splitLine(SplitA_Pop, SplitA_ID, currentPopGoal, overallPop)
-            splitLine(SplitB_Pop, SplitB_ID, currentPopGoal, overallPop)
-            return
-        tract_number += 1
+    split = shortest(cdata, currentPopGoal)
+    SplitA = split
+    SplitB = []
+    for x in cdata:
+        if x not in SplitA:
+            SplitB.append(x)
+    splitLine(SplitA, currentPopGoal, overallPop)
+    splitLine(SplitB, currentPopGoal, overallPop)
+    return
 
-splitLine(populations, geoID, sumPop, sumPop)
 
+splitLine(data, sumPop, sumPop)
 print(dictionary)
-
 dict_j = json.dumps(dictionary)
-
 f = open("SplitlineDictionary.json", "w+")
 f.write(dict_j)
 f.close()
