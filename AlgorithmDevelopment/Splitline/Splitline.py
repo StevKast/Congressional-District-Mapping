@@ -14,7 +14,8 @@ i = 0
 for p in populations:
     sumPop += p
 
-
+# Iterate through a list of tracts and split into two lists of even population.
+# Based on population goal given
 def getSplit(cdata, goal):
     endpop = 0
     current = 0
@@ -25,7 +26,7 @@ def getSplit(cdata, goal):
             endpop += 1
     return endpop
 
-
+# order list of tracts based on distance from top rightmost tract
 def topRight(cdata, popGoal):
     topRightC = []
     tr_data = []
@@ -35,10 +36,15 @@ def topRight(cdata, popGoal):
 
     for x in cdata:
         d = math.sqrt((x[3] - topRightC[3]) ** 2) + ((x[4] - topRightC[4]) ** 2)
-        x.append(d)
+        if len(x) == 5:
+            x.append(d)
+        else:
+            x.pop(5)
+            x.append(d)
         tr_data.append(x)
 
     tr_data = sorted(tr_data, key=lambda x: x[5])
+    print(tr_data)
     split = getSplit(tr_data, popGoal)
     tr_data = tr_data[0:split]
     topLeftC = []
@@ -52,7 +58,7 @@ def topRight(cdata, popGoal):
     distance = math.sqrt((topLeftC[3] - bottomRightC[3]) ** 2 + (topLeftC[4] - bottomRightC[4]) ** 2)
     return distance, tr_data
 
-
+# order list of tracts based on distance from top leftmost tract
 def topLeft(cdata, popGoal):
     topLeftC = []
     tl_data = []
@@ -62,10 +68,15 @@ def topLeft(cdata, popGoal):
 
     for x in cdata:
         d = math.sqrt((x[3] - topLeftC[3]) ** 2) + ((x[4] - topLeftC[4]) ** 2)
-        x.append(d)
+        if len(x) == 5:
+            x.append(d)
+        else:
+            x.pop(5)
+            x.append(d)
         tl_data.append(x)
 
     tl_data = sorted(tl_data, key=lambda x: x[5])
+    print(tl_data)
     split = getSplit(tl_data, popGoal)
     tl_data = tl_data[0:split]
     topRightC = []
@@ -79,7 +90,7 @@ def topLeft(cdata, popGoal):
     distance = math.sqrt((topLeftC[3] - bottomLeftC[3]) ** 2 + (topLeftC[4] - bottomLeftC[4]) ** 2)
     return distance, tl_data
 
-
+# order list of tracts based on distance from bottom leftmost tract
 def bottomLeft(cdata, popGoal):
     bottomLeftC = []
     bl_data = []
@@ -89,10 +100,15 @@ def bottomLeft(cdata, popGoal):
 
     for x in cdata:
         d = math.sqrt((x[3] - bottomLeftC[3]) ** 2) + ((x[4] - bottomLeftC[4]) ** 2)
-        x.append(d)
+        if len(x) == 5:
+            x.append(d)
+        else:
+            x.pop(5)
+            x.append(d)
         bl_data.append(x)
 
     bl_data = sorted(bl_data, key=lambda x: x[5])
+    print(bl_data)
     split = getSplit(bl_data, popGoal)
     bl_data = bl_data[0:split]
     topLeftC = []
@@ -106,7 +122,7 @@ def bottomLeft(cdata, popGoal):
     distance = math.sqrt((topLeftC[3] - bottomRightC[3]) ** 2 + (topLeftC[4] - bottomRightC[4]) ** 2)
     return distance, bl_data
 
-
+# order list of tracts based on distance from bottom rightmost tract
 def bottomRight(cdata, popGoal):
     bottomRightC = []
     br_data = []
@@ -116,10 +132,15 @@ def bottomRight(cdata, popGoal):
 
     for x in cdata:
         d = math.sqrt((x[3] - bottomRightC[3]) ** 2) + ((x[4] - bottomRightC[4]) ** 2)
-        x.append(d)
+        if len(x) == 5:
+            x.append(d)
+        else:
+            x.pop(5)
+            x.append(d)
         br_data.append(x)
 
     br_data = sorted(br_data, key=lambda x: x[5])
+    print(br_data)
     split = getSplit(br_data, popGoal)
     br_data = br_data[0:split]
     topRightC = []
@@ -133,6 +154,7 @@ def bottomRight(cdata, popGoal):
     distance = math.sqrt((topRightC[3] - bottomLeftC[3]) ** 2 + (topRightC[4] - bottomLeftC[4]) ** 2)
     return distance, br_data
 
+# Compare Splitline distance from all splits possible, choose shortest splitline
 def shortest(cdata, currentPopGoal):
     choices = []
     choices.append(topRight(cdata, currentPopGoal))
