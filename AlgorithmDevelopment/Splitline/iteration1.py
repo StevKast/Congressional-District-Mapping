@@ -3,7 +3,7 @@ import json
 
 dictionary = {}
 districtNumber = 1
-tract_data = pd.read_csv("AlgorithmDevelopment_tract_data.csv")
+tract_data = pd.read_csv("tract_data.csv")
 populations = tract_data[' POP'].tolist()
 geoID = tract_data['GEOID'].tolist()
 

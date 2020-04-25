@@ -2,7 +2,7 @@ import pandas as pd
 import math
 from operator import itemgetter
 
-tract_data = pd.read_csv("Lloyd/tract_data.csv")
+tract_data = pd.read_csv("tract_data.csv")
 
 populations = tract_data[' POP'].tolist()
 geoID = tract_data['GEOID'].tolist()
