@@ -30,5 +30,5 @@ data = sorted(data, key=lambda x: x[5])
 
 print(data)
 
-df = pd.DataFrame(data, columns=['GEOID', 'POP', 'FULL_NAME', 'LAT', 'LON', 'DISTANCE_TO_TOP_RIGHT'])
+df = pd.DataFrame(data, columns=['POP', 'GEOID', 'FULL_NAME', 'LAT', 'LON', 'DISTANCE_TO_TOP_RIGHT'])
 df.to_csv("ordered_tracts.csv")
