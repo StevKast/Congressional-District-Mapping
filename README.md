@@ -63,4 +63,12 @@ Issues:
 ### Shortest Splitline Algorithm
 Folder: Splitline.
 
+There have been three main iterations for this algorithm.
+
+1. Splitline.py: The first iteration of this algorithm looped through all census tracts and split the data into two subsets, both with equal population. This was done recursively with each subset until 16 equally-populated districts were created. This iteration saw non-continuous districts because the tracts were not sorted in any meaninful way at the start.
+
+2. Splitline.py: The second iteration of this algorithm first sorted the census tracts by each of the tract's distance to the north-eastmost tract. In this way, as the tracts were sorted into 16 districts, the districts would be continuous. This iteration resulted in  zebra like pattern where each district was a ring around the north-east most tract by which each tract was sorted.
+
+3. Splitline.py: The third iteration had to address the ring-like splits in the second iteration. All tracts were ordered based on the single tract no matter where the district was. Because of this, we had to change how each district being split ordered its tracts before splitting. To do this, each large district would be ordered based on the four corners of the district itself. It was then split based on all four of those orders, and the shortest split was calculated. This made it possible to truly divide each district based on the shortest line possible, and made the districts look more natural. The result of this iteration was a great improvement. Some districts still had one or two tracts not attached, but overall the districts looked contiguous and compact.
+
 Author: Brian Fotheringham
