@@ -60,6 +60,8 @@ Issues:
 - The main issue is that the districts that are being generated are not continous.
 ...There seems to be a correlation between the balance of populations and degree of a district being contiguous. The more balanced the populations are, the less contiguous a district is.
 
+For full algorithm explanation with complete documentation, please see `lloyd_fixed_split.py`. This python script is fully commented and you should be able to follow the algorithm closely.
+
 ### Shortest Splitline Algorithm
 Folder: Splitline.
 
