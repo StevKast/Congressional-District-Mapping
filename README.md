@@ -74,3 +74,12 @@ There have been three main iterations for this algorithm.
 3. `Splitline.py`: The third iteration had to address the ring-like splits in the second iteration. All tracts were ordered based on the single tract no matter where the district was. Because of this, we had to change how each district being split ordered its tracts before splitting. To do this, each large district would be ordered based on the four corners of the district itself. It was then split based on all four of those orders, and the shortest split was calculated. This made it possible to truly divide each district based on the shortest line possible, and made the districts look more natural. The result of this iteration was a great improvement. Some districts still had one or two tracts not attached, but overall the districts looked contiguous and compact.
 
 Author: Brian Fotheringham
+
+## Obtaining Results
+Here are the steps for running the algorithms and obtaining the results.
+
+1. Run `Splitline.py` in the splitline directory.
+2. Run `lloyd_fixed_split.py` in the lloyd directory.
+3. In the parent directory, AlgorithmDevelopment, run `result_to_geo.py`. It will produce the `result_Splitline.json` and `result_Lloyd.json` json files.
+4. Move these two json files into the front-end directory in the components folder.
+5. Push the changes to the front-end directory to git and it will auto deploy to the heroku app.
